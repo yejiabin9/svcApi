@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	log "github.com/asim/go-micro/v3/logger"
-	svc "github.com/jiabin9/svc/proto/svc"
-	svcApi "github.com/jiabin9/svcApi/proto/svcApi"
+	svc "github.com/yejiabin9/svc/proto/svc"
+	svcApi "github.com/yejiabin9/svcApi/proto/svcApi"
 )
 
 type SvcApi struct {

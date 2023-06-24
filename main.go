@@ -2,22 +2,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/afex/hystrix-go/hystrix"
-	ratelimit "github.com/asim/go-micro/plugins/wrapper/ratelimiter/uber/v3"
-	opentracing2 "github.com/asim/go-micro/plugins/wrapper/trace/opentracing/v3"
+	"github.com/asim/go-micro/plugins/registry/consul/v3"
+	"github.com/asim/go-micro/v3"
 	"github.com/asim/go-micro/v3/registry"
 	"github.com/asim/go-micro/v3/server"
-	"github.com/jiabin9/common"
-	go_micro_service_svc "github.com/jiabin9/svc/proto/svc"
+	"github.com/yejiabin9/common"
+	go_micro_service_svc "github.com/yejiabin9/svc/proto/svc"
 
-	"github.com/jiabin9/svcApi/handler"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/yejiabin9/svcApi/handler"
 	"net"
 	"net/http"
-	//hystrix2 "github.com/jiabin9/svcApi/plugin/hystrix"
+	//hystrix2 "github.com/yejiabin9/svcApi/plugin/hystrix"
 	"strconv"
 
-	svcApi "github.com/jiabin9/svcApi/proto/svcApi"
+	svcApi "github.com/yejiabin9/svcApi/proto/svcApi"
 )
 
 var (
@@ -57,8 +56,8 @@ func main() {
 	opentracing.SetGlobalTracer(t)
 
 	//3.添加熔断器
-	hystrixStreamHandler := hystrix.NewStreamHandler()
-	hystrixStreamHandler.Start()
+	//hystrixStreamHandler := hystrix.NewStreamHandler()
+	//hystrixStreamHandler.Start()
 
 	//添加日志中心
 	//1）需要程序日志打入到日志文件中
