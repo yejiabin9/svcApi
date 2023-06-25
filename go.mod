@@ -7,18 +7,17 @@ require (
 	github.com/asim/go-micro/v3 v3.7.1
 	github.com/golang/protobuf v1.5.3
 	github.com/jinzhu/gorm v1.9.16
-	//github.com/opentracing/opentracing-go v1.2.0
-	github.com/yejiabin9/common v0.1.2
 	github.com/yejiabin9/svc v0.0.0-20230624133346-ce665ef7e143
 	google.golang.org/protobuf v1.30.0
 )
+
+require github.com/sirupsen/logrus v1.7.0
 
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da // indirect
-	github.com/asim/go-micro/plugins/config/source/consul/v3 v3.7.0 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect

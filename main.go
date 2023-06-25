@@ -6,13 +6,11 @@ import (
 	"github.com/asim/go-micro/v3"
 	"github.com/asim/go-micro/v3/registry"
 	"github.com/asim/go-micro/v3/server"
-	"github.com/yejiabin9/common"
+	"github.com/sirupsen/logrus"
 	go_micro_service_svc "github.com/yejiabin9/svc/proto/svc"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/yejiabin9/svcApi/handler"
-	"net"
-	"net/http"
 	//hystrix2 "github.com/yejiabin9/svcApi/plugin/hystrix"
 	"strconv"
 
@@ -21,11 +19,11 @@ import (
 
 var (
 	//服务地址
-	hostIp = "192.168.0.108"
+	hostIp = "39.104.82.215"
 	//服务地址
-	serviceHost = hostIp
+	serviceHost = "192.168.31.50"
 	//服务端口
-	servicePort = "8082"
+	servicePort = "8084"
 	//注册中心配置
 	consulHost       = hostIp
 	consulPort int64 = 8500
@@ -48,12 +46,12 @@ func main() {
 	})
 
 	//2.添加链路追踪
-	t, io, err := common.NewTracer("go.micro.api.svcApi", tracerHost+":"+strconv.Itoa(tracerPort))
-	if err != nil {
-		common.Error(err)
-	}
-	defer io.Close()
-	opentracing.SetGlobalTracer(t)
+	//t, io, err := common.NewTracer("go.micro.api.svcApi", tracerHost+":"+strconv.Itoa(tracerPort))
+	//if err != nil {
+	//	common.Error(err)
+	//}
+	//defer io.Close()
+	//opentracing.SetGlobalTracer(t)
 
 	//3.添加熔断器
 	//hystrixStreamHandler := hystrix.NewStreamHandler()
@@ -66,17 +64,17 @@ func main() {
 	fmt.Println("日志统一记录在根目录 micro.log 文件中，请点击查看日志！")
 
 	//启动监听程序
-	go func() {
-		//http://192.168.0.112:9092/turbine/turbine.stream
-		//看板访问地址 http://127.0.0.1:9002/hystrix，url后面一定要带 /hystrix
-		err = http.ListenAndServe(net.JoinHostPort("0.0.0.0", strconv.Itoa(hystrixPort)), hystrixStreamHandler)
-		if err != nil {
-			common.Error(err)
-		}
-	}()
+	//go func() {
+	//	//http://192.168.0.112:9092/turbine/turbine.stream
+	//	//看板访问地址 http://127.0.0.1:9002/hystrix，url后面一定要带 /hystrix
+	//	err = http.ListenAndServe(net.JoinHostPort("0.0.0.0", strconv.Itoa(hystrixPort)), hystrixStreamHandler)
+	//	if err != nil {
+	//		common.Error(err)
+	//	}
+	//}()
 
 	//4.添加监控
-	common.PrometheusBoot(prometheusPort)
+	//common.PrometheusBoot(prometheusPort)
 
 	//5.创建服务
 	service := micro.NewService(
@@ -92,14 +90,14 @@ func main() {
 		//添加注册中心
 		micro.Registry(consul),
 		//添加链路追踪
-		micro.WrapHandler(opentracing2.NewHandlerWrapper(opentracing.GlobalTracer())),
-		micro.WrapClient(opentracing2.NewClientWrapper(opentracing.GlobalTracer())),
-		//只作为客户端的时候起作用
-		micro.WrapClient(hystrix2.NewClientHystrixWrapper()),
-		//添加限流
-		micro.WrapHandler(ratelimit.NewHandlerWrapper(1000)),
-		//增加负载均衡
-		micro.WrapClient(roundrobin.NewClientWrapper()),
+		//micro.WrapHandler(opentracing2.NewHandlerWrapper(opentracing.GlobalTracer())),
+		//micro.WrapClient(opentracing2.NewClientWrapper(opentracing.GlobalTracer())),
+		////只作为客户端的时候起作用
+		//micro.WrapClient(hystrix2.NewClientHystrixWrapper()),
+		////添加限流
+		//micro.WrapHandler(ratelimit.NewHandlerWrapper(1000)),
+		////增加负载均衡
+		//micro.WrapClient(roundrobin.NewClientWrapper()),
 	)
 
 	service.Init()
@@ -110,12 +108,12 @@ func main() {
 	svcService := go_micro_service_svc.NewSvcService("go.micro.service.svc", service.Client())
 	// 注册控制器
 	if err := svcApi.RegisterSvcApiHandler(service.Server(), &handler.SvcApi{SvcService: svcService}); err != nil {
-		common.Error(err)
+		logrus.Error(err)
 	}
 
 	// 启动服务
 	if err := service.Run(); err != nil {
 		//输出启动失败信息
-		common.Fatal(err)
+		logrus.Error(err)
 	}
 }
